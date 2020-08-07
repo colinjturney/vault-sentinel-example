@@ -1,0 +1,16 @@
+# Restrict requests for new secret engines to *NOT* include kv secrets engine
+
+restrict_kv_update = rule {
+  request.operation == "update" and
+  request.data["type"] == "kv"
+}
+
+# Need to allow the delete operation to be performed still, hence the following
+
+allow_kv_delete = rule {
+  request.operation == "delete"
+}
+
+main = rule {
+  restrict_kv_update or allow_kv_delete
+}
